@@ -1,30 +1,31 @@
-import express from 'express';
-import cors from 'cors';
+import express from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv';
-import serverless from 'serverless-http';
-import mongoConnect from './db.js';
-
-import orderRouter from './routes/order.js';
-import groupRouter from './routes/grouping.js';
+import mongoConnect from './db.js' 
 
 dotenv.config();
-const app = express();
+const app = express()
 
 const URI = process.env.MONGO_URI;
 mongoConnect(URI);
 
-
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://vendor-mart-izmz.vercel.app/'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: 'https://vendor-mart-izmz.vercel.app/',       // allow any origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}))
+
+
+import orderRouter from './routes/order.js'
+import groupRouter from './routes/grouping.js'
 
 app.use('/api', orderRouter);
-app.use('/api/group-and-match', groupRouter);
+app.use("/api/group-and-match", groupRouter);
 
-
-export const handler = serverless(app);
+app.listen(3000, () => {
+    console.log(`Server Running on Port: http://localhost:3000`)
+})
